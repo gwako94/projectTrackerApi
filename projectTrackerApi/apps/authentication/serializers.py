@@ -60,3 +60,41 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # create a new user
         return User.objects.create_user(**validated_data)
+
+
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255)
+    username = serializers.CharField(max_length=255, read_only=True)
+    password = serializers.CharField(max_length=128, write_only=True)
+
+    # token when user logs in
+    token = serializers.CharField(max_length=1028, read_only=True)
+
+    def validate(self, data):
+        email = data.get('email', None)
+        password = data.get('password', None)
+
+        # email not provided
+        if email is None:
+            raise serializers.ValidationError(
+                'An email address is required to log in.'
+            )
+
+        # password not provided
+        if password is None:
+            raise serializers.ValidationError(
+                'A password is required to log in.'
+            )
+
+        # Authenticate User, `we set username to email in our model`
+        user = authenticate(username=email, password=password)
+
+        if user is None:
+            raise serializers.ValidationError(
+                'A user with this email and password was not found.'
+            )
+
+        return {
+            'email': user.email,
+            'token': user.token
+        }

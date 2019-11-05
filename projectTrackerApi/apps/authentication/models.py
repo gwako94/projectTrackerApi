@@ -1,8 +1,12 @@
+import os
+import datetime
+import jwt
+
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
 from django.db import models
-
+from django.conf import settings
 
 class UserManager(BaseUserManager):
     """ 
@@ -46,3 +50,23 @@ class User(AbstractBaseUser, PermissionsMixin):
         This string is used when a `User` is printed in the console.
         """
         return self.email
+
+
+    @property
+    def token(self):
+        """Generate a user token"""
+        try:
+            token = jwt.encode({
+                "id": self.pk,
+                'username': self.username,
+                'email': self.email,
+                'iat': datetime.datetime.utcnow(),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=int(
+                    os.getenv("EXPIRES_AFTER", 15)
+                ))
+
+            }, settings.SECRET_KEY, algorithm="HS256").decode()
+        except jwt.PyJWTError:
+            token = ""
+        return token
+    
