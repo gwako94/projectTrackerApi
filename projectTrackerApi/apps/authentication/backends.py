@@ -12,12 +12,12 @@ class JWTAuthentication(authentication.BaseAuthentication):
         # AUthenticate auth token
         auth_header = authentication.get_authorization_header(request).split()
 
-        token_key = auth_header[0].decode('utf-8')
-        auth_token = auth_header[1].decode('utf-8')
-
         if not auth_header:
             return None
 
+        token_key = auth_header[0].decode('utf-8')
+        auth_token = auth_header[1].decode('utf-8')
+        
         if len(auth_header) < 2 or len(auth_header) > 2:
             msg = 'Invalid authorization header'
             raise exceptions.AuthenticationFailed(msg)

@@ -16,5 +16,6 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
-    path('api/v1/users/', include('projectTrackerApi.apps.authentication.urls'))
+    path('api/v1/users/', include('projectTrackerApi.apps.authentication.urls')),
+    path('api/v1/projects/', include('projectTrackerApi.apps.projects.urls')),
 ]

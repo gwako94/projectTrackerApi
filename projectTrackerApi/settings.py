@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Custom apps
-    'projectTrackerApi.apps.authentication'
+    'projectTrackerApi.apps.authentication',
+    'projectTrackerApi.apps.projects'
 ]
 
 MIDDLEWARE = [
