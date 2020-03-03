@@ -69,3 +69,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         except jwt.PyJWTError:
             token = ""
         return token
+    
